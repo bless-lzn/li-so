@@ -37,11 +37,19 @@
       </a-form-item>
 
       <a-form-item name="remember" :wrapper-col="{ offset: 4, span: 20 }">
-        <a-checkbox v-model:checked="formState.remember">记住我</a-checkbox>
-      </a-form-item>
 
-      <a-form-item :wrapper-col="{ offset: 12, span: 12 }">
-        <a-button type="primary" html-type="submit">登录</a-button>
+        <a-row>
+          <a-checkbox v-model:checked="formState.remember">
+            记住我
+          </a-checkbox>
+          <div class="tips">
+            没有账号？
+            <RouterLink to="/user/register">去注册</RouterLink>
+          </div>
+        </a-row>
+      </a-form-item>
+      <a-form-item :wrapper-col="{ offset :4,span: 20 }">
+        <a-button type="primary" html-type="submit" style="width: 100%">登录</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -79,8 +87,8 @@ const handleSubmit = async (values: any) => {
           replace: true,
         }
     );
-  }else{
-    message.error("注册失败"+res.data.message)
+  } else {
+    message.error("注册失败" + res.data.message)
   }
 };
 
@@ -95,5 +103,8 @@ const onFinishFailed = (errorInfo: any) => {
 
 }
 
+#userLoginPage .tips {
+  margin-left: auto;
+}
 </style>
 

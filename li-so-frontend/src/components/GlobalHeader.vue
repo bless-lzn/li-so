@@ -16,10 +16,7 @@
           <div v-else>        <!--  登录按钮-->
             <a-button type="primary" href="/user/login">登录</a-button>
           </div>
-
         </div>
-
-
       </a-col>
     </a-row>
   </div>
@@ -48,16 +45,6 @@ const items = ref<MenuProps['items']>([
     icon: () => h(HomeOutlined),
     label: '主页',
     title: '主页',
-  },
-  {
-    key: '/user/login',
-    label: '用户登录',
-    title: '用户登录',
-  },
-  {
-    key: '/user/register',
-    label: '用户注册',
-    title: '用户注册',
   },
   {
     key: "/admin/userManager",
