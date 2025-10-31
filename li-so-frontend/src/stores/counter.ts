@@ -1,7 +1,8 @@
 import {ref, computed} from 'vue'
 import {defineStore} from 'pinia'
-import {getCurrentUser} from "@/api/user.ts";
+
 import myAxios from "@/request.ts";
+import {getLoginUserUsingGet} from "@/api/userController.ts";
 
 export const useLoginUSerStore = defineStore('loginUser', () => {
     const loginUser = ref({
@@ -9,7 +10,7 @@ export const useLoginUSerStore = defineStore('loginUser', () => {
         userRole: 0
     })
     async function fetchLoginUser() {
-       const res=await getCurrentUser()
+       const res=await getLoginUserUsingGet()
         if(res.data.code===0&&res.data.data){
             loginUser.value=res.data.data
         }

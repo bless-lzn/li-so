@@ -1,110 +1,81 @@
 <template>
   <div id="userLoginPage">
-    <h2 class="title">
-      用户登录
-    </h2>
-    <a-form
-        labelAlign="left"
-
-        style="max-width: 480px; margin: 0 auto"
-        :model="formState"
-        name="basic"
-        :label-col="{ span: 4 }"
-        :wrapper-col="{ span: 20 }"
-        autocomplete="off"
-        @finish="handleSubmit"
-        @finishFailed="onFinishFailed"
-    >
+    <h2 class="title"> AI 应用生成 - 用户登录</h2>
+    <div class="desc">不写一行代码，生成完整应用</div>
+    <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit">
+      <a-form-item name="userAccount" :rules="[{ required: true, message: '请输入账号' }]">
+        <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />
+      </a-form-item>
       <a-form-item
-          label="账号"
-          name="username"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
+          name="userPassword"
+          :rules="[
+          { required: true, message: '请输入密码' },
+          { min: 8, message: '密码不能小于 8 位' },
+        ]"
       >
-        <a-input
-            v-model:value="formState.username"
-            placeholder="请输入账号"
-        />
+        <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码" />
       </a-form-item>
-
-      <a-form-item
-          label="密码"
-          name="password"
-          :rules="[{ required: true, message: 'Please input your password!' },{min:8,message:'密码长度不能小于8位'}]"
-      >
-        <a-input-password v-model:value="formState.password"
-                          placeholder="请输入密码"
-        />
-      </a-form-item>
-
-      <a-form-item name="remember" :wrapper-col="{ offset: 4, span: 20 }">
-
-        <a-row>
-          <a-checkbox v-model:checked="formState.remember">
-            记住我
-          </a-checkbox>
-          <div class="tips">
-            没有账号？
-            <RouterLink to="/user/register">去注册</RouterLink>
-          </div>
-        </a-row>
-      </a-form-item>
-      <a-form-item :wrapper-col="{ offset :4,span: 20 }">
+      <div class="tips">
+        没有账号？
+        <RouterLink to="/user/register">去注册</RouterLink>
+      </div>
+      <a-form-item>
         <a-button type="primary" html-type="submit" style="width: 100%">登录</a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
-<script lang="ts" setup>
-import {reactive} from 'vue';
-import {userLogin} from "@/api/user.ts";
-import {useLoginUSerStore} from "@/stores/counter.ts";
+<script setup lang="ts">
+import {reactive} from "vue";
+
 import {message} from "ant-design-vue";
-import {useRouter} from "vue-router";
+import router from "@/router";
+import {useLoginUSerStore} from "@/stores/counter.ts";
+import {userLoginUsingPost} from "@/api/userController.ts";
 
-const router = useRouter();
-
-interface FormState {
-  username: string
-  password: string
-  remember: boolean
-}
-
-const formState = reactive<FormState>({
-  username: '',
-  password: '',
-  remember: true,
-});
 const loginUserStore = useLoginUSerStore();
-const handleSubmit = async (values: any) => {
-  const res = await userLogin(values)
-  //登录成功，保存登录态到全局状态
-  if (res.data.code === 0 && res.data.data) {
-    await loginUserStore.fetchLoginUser()
-    message.success('登录成功')
-    router.push(
-        {
-          path: '/',
-          replace: true,
-        }
-    );
-  } else {
-    message.error("注册失败" + res.data.message)
-  }
-};
+const formState = reactive<API.UserLoginRequest>({
+  userAccount: '',
+  userPassword: '',
+})
+const handleSubmit = async () => {
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-};
+  console.log("你好")
+  const res = await userLoginUsingPost(formState)
+  if (res.data.code === 0&&res.data.data) {
+    loginUserStore.setLoginUser(res.data.data)
+    message.success('登录成功')
+    await router.push({
+      path: '/',
+      replace: true
+    })
+  } else {
+    message.error('登录失败，' + res.data.message)
+  }
+}
 </script>
 <style scoped>
-#userLoginPage .title {
+#userLoginPage {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.title {
   text-align: center;
-  margin-bottom: 20px;
-
+  margin-bottom: 16px;
 }
 
-#userLoginPage .tips {
-  margin-left: auto;
+.desc {
+  text-align: center;
+  color: #bbb;
+  margin-bottom: 16px;
 }
+
+.tips {
+  margin-bottom: 16px;
+  color: #bbb;
+  font-size: 13px;
+  text-align: right;
+}
+
 </style>
-

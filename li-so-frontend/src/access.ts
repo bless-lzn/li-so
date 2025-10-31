@@ -2,7 +2,6 @@
  * 全局权限校验
  */
 import router from "@/router";
-import {getCurrentUser} from "@/api/user.ts";
 import {useLoginUSerStore} from "@/stores/counter.ts";
 import {message} from "ant-design-vue";
 

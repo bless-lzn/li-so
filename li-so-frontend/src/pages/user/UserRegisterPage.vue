@@ -13,7 +13,6 @@
         :wrapper-col="{ span: 20 }"
         autocomplete="off"
         @finish="handleSubmit"
-        @finishFailed="onFinishFailed"
     >
       <a-form-item
           label="账号"
@@ -45,16 +44,17 @@
         />
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 12, span: 12 }">
-        <a-button type="primary" html-type="submit">登录</a-button>
+        <a-button type="primary" html-type="submit" @click="onFinishFailed">登录</a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
 <script lang="ts" setup>
 import {reactive} from 'vue';
-import {userRegister} from "@/api/user.ts";
+
 import {message} from "ant-design-vue";
 import {useRouter} from "vue-router";
+import {userRegisterUsingPost} from "@/api/userController.ts";
 
 const router = useRouter();
 //类型
@@ -77,7 +77,7 @@ const handleSubmit = async (values: any) => {
     return
   }
 
-  const res = await userRegister(values)
+  const res = await userRegisterUsingPost(values)
   //登录成功，保存登录态到全局状态
   if (res.data.code === 0 && res.data.data) {
     message.success('注册成功')
@@ -91,6 +91,7 @@ const handleSubmit = async (values: any) => {
     message.error("注册失败"+res.data.message)
   }
 };
+
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo)
