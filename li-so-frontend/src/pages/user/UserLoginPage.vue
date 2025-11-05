@@ -30,10 +30,10 @@ import {reactive} from "vue";
 
 import {message} from "ant-design-vue";
 import router from "@/router";
-import {useLoginUSerStore} from "@/stores/counter.ts";
+import {useLoginUserStore} from "@/stores/counter.ts";
 import {userLoginUsingPost} from "@/api/userController.ts";
 
-const loginUserStore = useLoginUSerStore();
+const loginUserStore = useLoginUserStore();
 const formState = reactive<API.UserLoginRequest>({
   userAccount: '',
   userPassword: '',

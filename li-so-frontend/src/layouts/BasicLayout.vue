@@ -16,11 +16,12 @@
 import GlobalHeader from "@/components/GlobalHeader.vue";
 </script>
 <style scoped>
+#basicLayout{
+  background: #f0f2f6;
+}
 #basicLayout .content{
   padding: 16px;
   margin-bottom: 20px;
-  background: linear-gradient(to right, #fafafa, #fff);
-
 }
 #basicLayout .footer{
   text-align: center;

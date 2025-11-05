@@ -4,7 +4,7 @@ import {defineStore} from 'pinia'
 import myAxios from "@/request.ts";
 import {getLoginUserUsingGet} from "@/api/userController.ts";
 
-export const useLoginUSerStore = defineStore('loginUser', () => {
+export const useLoginUserStore = defineStore('loginUser', () => {
     const loginUser = ref({
         userName: '未登录',
         userRole: 0

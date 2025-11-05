@@ -50,7 +50,7 @@ import {MailOutlined, AppstoreOutlined, SettingOutlined, HomeOutlined,LogoutOutl
 import {MenuProps, message} from 'ant-design-vue';
 import router from "@/router";
 
-import {useLoginUSerStore} from "@/stores/counter.ts";
+import {useLoginUserStore} from "@/stores/counter.ts";
 import {userLogoutUsingPost} from "@/api/userController.ts";
 
 const current = ref<string[]>([]);
@@ -73,6 +73,11 @@ const originItems = [
     label: '用户管理',
     title: '用户管理',
   },
+  {
+    key:'/user/search',
+    label: '搜索',
+    title: '搜索',
+  },
 ]
 
 
@@ -94,7 +99,7 @@ const menuItems=computed<MenuProps['items']>(() => {
 })
 
 
-const loginUserStore = useLoginUSerStore();
+const loginUserStore = useLoginUserStore();
 
 const doMenuClick = ({key}: { key: string }) => {
   // console.log(key)
