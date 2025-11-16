@@ -2,10 +2,12 @@ package com.limou.so.service.impl;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.limou.so.common.ErrorCode;
 import com.limou.so.exception.BusinessException;
 import com.limou.so.exception.ThrowUtils;
 import com.limou.so.model.dto.picture.PictureRequest;
+import com.limou.so.model.dto.search.SearchRequest;
 import com.limou.so.model.entity.Picture;
 import com.limou.so.service.PictureService;
 import org.jsoup.Jsoup;
@@ -23,11 +25,11 @@ import java.util.Map;
 public class PictureServiceImpl implements PictureService {
 
     @Override
-    public List<Picture> searchPicture(PictureRequest pictureRequest) {
+    public Page<Picture> searchPicture(SearchRequest searchRequest) {
          //使用jsoup爬取页面的图片并且返回给前端
         //1.获取url
-        String searchText = pictureRequest.getSearchText();
-        int pageSize = pictureRequest.getPageSize();
+        String searchText = searchRequest.getSearchText();
+        int pageSize = searchRequest.getPageSize();
         String fetchUrl = String.format("https://cn.bing.com/images/async?q=%s&mmasync=1", searchText);
         Document document = null;
         try {
@@ -54,6 +56,9 @@ public class PictureServiceImpl implements PictureService {
                 break;
             }
         }
-        return pictures;
+
+        Page<Picture> pagePicture = new Page<>(searchRequest.getCurrent(), searchRequest.getPageSize(), pictures.size());
+        pagePicture.setRecords(pictures);
+        return pagePicture;
     }
 }

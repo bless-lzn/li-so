@@ -4,6 +4,7 @@ import static com.limou.so.constant.UserConstant.USER_LOGIN_STATE;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.limou.so.common.ErrorCode;
 import com.limou.so.constant.CommonConstant;
@@ -268,5 +269,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;
+    }
+
+    /**
+     * 分页获取用户封装列表
+     *
+     * @param userQueryRequest
+     * @return
+     */
+    @Override
+    public Page<UserVO> listUserVOByPage(UserQueryRequest userQueryRequest) {
+        //校验
+        if (userQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        int current = userQueryRequest.getCurrent();
+        int size = userQueryRequest.getPageSize();
+        //1.通过searchText得到user
+        QueryWrapper<User> queryWrapper = this.getQueryWrapper(userQueryRequest);
+        List<User> listUser = this.list(queryWrapper);
+        //2.进行转化VO
+        List<UserVO> userVOList = this.getUserVO(listUser);
+        Page<UserVO> pageUser = new Page<>(current, size, listUser.size());
+        pageUser.setRecords(userVOList);
+        return pageUser;
     }
 }

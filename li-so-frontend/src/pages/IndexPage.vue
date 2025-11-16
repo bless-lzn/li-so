@@ -85,6 +85,7 @@ const postQuery={
   ...searchParams.value,
   searchText:searchParams.value.text
 }
+// Promise.all([getPostData(),getUserData(),getPictureData()])
 const getPostData = async () => {
   const res = await listPostByPageUsingPost(postQuery)
   console.log(res.data.data?.records)

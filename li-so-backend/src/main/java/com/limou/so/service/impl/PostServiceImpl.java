@@ -21,6 +21,7 @@ import com.limou.so.model.vo.UserVO;
 import com.limou.so.service.PostService;
 import com.limou.so.service.UserService;
 import com.limou.so.utils.SqlUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.collection.CollUtil;
 import org.apache.commons.lang3.ObjectUtils;
@@ -301,6 +303,23 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
             postVO.setHasFavour(postIdHasFavourMap.getOrDefault(post.getId(), false));
             return postVO;
         }).collect(Collectors.toList());
+        postVOPage.setRecords(postVOList);
+        return postVOPage;
+    }
+
+    @Override
+    public Page<PostVO> listPostVOByPage(PostQueryRequest postQueryRequest) {
+        //1. 获取查询参数
+        String searchText = postQueryRequest.getSearchText();
+        int current = postQueryRequest.getCurrent();
+        int pageSize = postQueryRequest.getPageSize();
+        //2. 创建查询条件
+        QueryWrapper<Post> queryWrapper = this.getQueryWrapper(postQueryRequest);
+        List<Post> postList = this.list(queryWrapper);
+        //转换
+        List<PostVO> postVOList = postList.stream().map(PostVO::objToVo).collect(Collectors.toList());
+        Page<PostVO> postVOPage = new Page<>(current, pageSize, postList.size());
+        //3.封装得到返回结果
         postVOPage.setRecords(postVOList);
         return postVOPage;
     }

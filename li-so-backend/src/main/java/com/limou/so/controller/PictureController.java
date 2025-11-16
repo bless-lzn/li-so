@@ -1,5 +1,6 @@
 package com.limou.so.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.limou.so.annotation.AuthCheck;
@@ -15,6 +16,7 @@ import com.limou.so.model.dto.post.PostAddRequest;
 import com.limou.so.model.dto.post.PostEditRequest;
 import com.limou.so.model.dto.post.PostQueryRequest;
 import com.limou.so.model.dto.post.PostUpdateRequest;
+import com.limou.so.model.dto.search.SearchRequest;
 import com.limou.so.model.entity.Picture;
 import com.limou.so.model.entity.Post;
 import com.limou.so.model.entity.User;
@@ -59,9 +61,8 @@ public class PictureController {
         long size = pictureRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        List<Picture> pictures = pictureService.searchPicture(pictureRequest);
-        Page<Picture> pagePicture = new Page<>(pictureRequest.getCurrent(), pictureRequest.getPageSize(), pictures.size());
-        pagePicture.setRecords(pictures);
-        return ResultUtils.success(pagePicture);
+        SearchRequest searchRequest = BeanUtil.copyProperties(pictureRequest, SearchRequest.class);
+        Page<Picture> picturePage = pictureService.searchPicture(searchRequest);
+        return ResultUtils.success(picturePage);
     }
 }
