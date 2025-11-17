@@ -35,7 +35,7 @@ const router = createRouter({
             component:IndexPage,
             children:[
                 {
-                    path:'/user/search/:category',
+                    path:':category',
                     name:'userSearchCategory',
                     component:IndexPage
                 }

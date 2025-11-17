@@ -181,7 +181,8 @@ public class PostController {
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Post> postPage = postService.page(new Page<>(current, size),
                 postService.getQueryWrapper(postQueryRequest));
-        return ResultUtils.success(postService.getPostVOPage(postPage, request));
+        Page<PostVO> postVOPage = postService.getPostVOPage(postPage, request);
+        return ResultUtils.success(postVOPage);
     }
 
     /**

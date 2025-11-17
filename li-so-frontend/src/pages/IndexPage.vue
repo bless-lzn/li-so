@@ -35,6 +35,8 @@ import UserList from "@/components/UserList.vue";
 import {editPostUsingPost, listPostByPageUsingPost} from "@/api/postController.ts";
 import {listUserVoByPageUsingPost} from "@/api/userController.ts";
 import {listPictureByPageUsingPost} from "@/api/pictureController.ts";
+import {searchAllUsingPost} from "@/api/searchController.ts";
+import {message} from "ant-design-vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -55,6 +57,7 @@ const onSearch = () => {
   router.push({
     query: searchParams.value
   })
+  loadData()
 }
 const onTabChange = (key: string) => {
   router.push({
@@ -67,56 +70,87 @@ const postList = ref<API.PostVO[]>([]);
 const userList = ref<API.UserVO[]>([]);
 const pictureList = ref<API.Picture[]>([]);
 
-const userQuery={
-  ...searchParams.value,
-  userName:searchParams.value.text
-}
-const getUserData = async () => {
-  const res = await listUserVoByPageUsingPost(userQuery)
-  console.log(res.data.data?.records)
-  if (res.data.code === 0 && res.data.data) {
-    userList.value = res.data.data?.records
-  } else {
-    console.log(userList.value)
+const loadData = async () => {
+  const query = {
+    ...searchParams.value,
+    searchText: searchParams.value.text,
+    type: activeKey.value
   }
-}
+  const type = query.type
+  //对总接口进行查询
+  // if (!type) {
+  //   message.error("类别为空")
+  //   return
+  // }
+  const res = await searchAllUsingPost(query)
+  if (res.data.code === 0 && res.data.data) {
 
-const postQuery={
-  ...searchParams.value,
-  searchText:searchParams.value.text
-}
-// Promise.all([getPostData(),getUserData(),getPictureData()])
-const getPostData = async () => {
-  const res = await listPostByPageUsingPost(postQuery)
-  console.log(res.data.data?.records)
-  if (res.data.code === 0 && res.data.data) {
-    postList.value = res.data.data?.records
-  } else {
-    console.log(postList.value)
+    if (type === "post") {
+      postList.value = res.data.data?.postVOList
+    } else if (type === "user") {
+      userList.value = res.data.data?.userVOList
+    } else if (type === "picture") {
+      pictureList.value = res.data.data?.pictureList
+    } else {
+      postList.value = res.data.data?.postVOList
+      userList.value = res.data.data?.userVOList
+      pictureList.value = res.data.data?.pictureList
+      console.log("没有匹配的")
+    }
   }
 }
-const pictureQuery={
-  ...searchParams.value,
-  searchText:searchParams.value.text
-}
-const getPictureData = async () => {
-  const res = await listPictureByPageUsingPost(pictureQuery)
-  console.log(res.data.data?.records)
-  if (res.data.code === 0 && res.data.data) {
-    pictureList.value = res.data.data?.records
-  } else {
-    console.log(pictureList.value)
-  }
-}
+// const userQuery={
+//   ...searchParams.value,
+//   userName:searchParams.value.text
+// }
+// const getUserData = async () => {
+//   const res = await listUserVoByPageUsingPost(userQuery)
+//   console.log(res.data.data?.records)
+//   if (res.data.code === 0 && res.data.data) {
+//     userList.value = res.data.data?.records
+//   } else {
+//     console.log(userList.value)
+//   }
+// }
+
+// const postQuery={
+//   ...searchParams.value,
+//   searchText:searchParams.value.text
+// }
+// // Promise.all([getPostData(),getUserData(),getPictureData()])
+// const getPostData = async () => {
+//   const res = await listPostByPageUsingPost(postQuery)
+//   console.log(res.data.data?.records)
+//   if (res.data.code === 0 && res.data.data) {
+//     postList.value = res.data.data?.records
+//   } else {
+//     console.log(postList.value)
+//   }
+// }
+// const pictureQuery={
+//   ...searchParams.value,
+//   searchText:searchParams.value.text
+// }
+// const getPictureData = async () => {
+//   const res = await listPictureByPageUsingPost(pictureQuery)
+//   console.log(res.data.data?.records)
+//   if (res.data.code === 0 && res.data.data) {
+//     pictureList.value = res.data.data?.records
+//   } else {
+//     console.log(pictureList.value)
+//   }
+// }
 onMounted(() => {
-  getPostData()
-  getUserData()
-  getPictureData()
+  // getPostData()
+  // getUserData()
+  // getPictureData()
+  loadData()
 })
-watch([activeKey,searchParams],([newKey, newParams])=>{
-  getPostData()
-  getUserData()
-  getPictureData()
+watch([activeKey, searchParams], ([newKey, newParams]) => {
+  // getPostData()
+  // getUserData()
+  // getPictureData()
+  loadData()
 })
 
 </script>

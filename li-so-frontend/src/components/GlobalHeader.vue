@@ -111,6 +111,9 @@ const doMenuClick = ({key}: { key: string }) => {
 // 检测路由变化
 router.afterEach((to, from) => {
   current.value = [to.path]
+  if(to.path.startsWith('/user/search')){
+    current.value=['/user/search']
+  }
 })
 
 
