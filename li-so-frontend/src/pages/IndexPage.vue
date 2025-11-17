@@ -86,11 +86,11 @@ const loadData = async () => {
   if (res.data.code === 0 && res.data.data) {
 
     if (type === "post") {
-      postList.value = res.data.data?.postVOList
+      postList.value = res.data.data?.dataList
     } else if (type === "user") {
-      userList.value = res.data.data?.userVOList
+      userList.value = res.data.data?.dataList
     } else if (type === "picture") {
-      pictureList.value = res.data.data?.pictureList
+      pictureList.value = res.data.data?.dataList
     } else {
       postList.value = res.data.data?.postVOList
       userList.value = res.data.data?.userVOList
