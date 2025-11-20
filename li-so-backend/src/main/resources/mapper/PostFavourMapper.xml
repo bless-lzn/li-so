@@ -4,7 +4,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yupi.springbootinit.mapper.PostFavourMapper">
+<mapper namespace="com.limou.so.mapper.PostFavourMapper">
 
     <resultMap id="BaseResultMap" type="com.limou.so.model.entity.PostFavour">
         <id property="id" column="id" jdbcType="BIGINT"/>
@@ -22,8 +22,8 @@
     <select id="listFavourPostByPage"
             resultType="com.limou.so.model.entity.Post">
         select p.*
-        from post p
-                 join (select postId from post_favour where userId = #{favourUserId}) pf
+        from liso.post p
+                 join (select postId from liso.post_favour where userId = #{favourUserId}) pf
                       on p.id = pf.postId ${ew.customSqlSegment}
     </select>
 </mapper>

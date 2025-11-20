@@ -146,11 +146,20 @@ onMounted(() => {
   // getPictureData()
   loadData()
 })
-watch([activeKey, searchParams], ([newKey, newParams]) => {
+let timeId=null
+watch([activeKey, searchParams.value], ([newKey, newParams]) => {
   // getPostData()
   // getUserData()
   // getPictureData()
-  loadData()
+if(timeId!==null){
+  clearTimeout(timeId)//清除定时器
+}
+  // 设置一个定时器来实现防抖
+  timeId= setTimeout(() => {
+    console.log("监听")
+    loadData()
+  },1000)
+
 })
 
 </script>
