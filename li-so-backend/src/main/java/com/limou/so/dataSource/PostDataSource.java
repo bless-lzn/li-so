@@ -8,8 +8,13 @@ import com.limou.so.model.entity.Post;
 import com.limou.so.model.vo.PostVO;
 import com.limou.so.service.PostService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 public class PostDataSource implements DataSource<PostVO> {
     @Resource
@@ -22,6 +27,11 @@ public class PostDataSource implements DataSource<PostVO> {
         searchRequest.setPageSize(pageSize);
         PostQueryRequest postQueryRequest = new PostQueryRequest();
         BeanUtil.copyProperties(searchRequest, postQueryRequest);
-        return postService.listPostVOByPage(postQueryRequest);
+//        postService.
+        Page<Post> postPage = postService.searchFromEs(postQueryRequest);
+        //得到request
+        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+        return postService.getPostVOPage(postPage, request);
     }
 }
