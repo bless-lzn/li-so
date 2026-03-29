@@ -19,15 +19,15 @@ import org.springframework.stereotype.Component;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 // todo 取消注释开启任务
-@Component
+//@Component
 @Slf4j
 public class FullSyncPostToEs implements CommandLineRunner {
 
     @Resource
     private PostService postService;
 
-    @Resource
-    private PostEsDao postEsDao;
+//    @Resource
+//    private PostEsDao postEsDao;
 
     @Override
     public void run(String... args) {
@@ -44,7 +44,7 @@ public class FullSyncPostToEs implements CommandLineRunner {
         for (int i = 0; i < total; i += pageSize) {
             int end = Math.min(i + pageSize, total);
             log.info("sync from {} to {}", i, end);
-            postEsDao.saveAll(postEsDTOList.subList(i, end));
+//            postEsDao.saveAll(postEsDTOList.subList(i, end));
         }
         log.info("FullSyncPostToEs end, total {}", total);
     }
