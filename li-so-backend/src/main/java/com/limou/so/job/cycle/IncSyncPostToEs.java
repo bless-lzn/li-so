@@ -1,5 +1,6 @@
 package com.limou.so.job.cycle;
 
+import com.limou.so.esdao.PostEsDao;
 import com.limou.so.mapper.PostMapper;
 import com.limou.so.model.dto.post.PostEsDTO;
 import com.limou.so.model.entity.Post;
@@ -19,15 +20,15 @@ import org.springframework.stereotype.Component;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 // todo 取消注释开启任务
-//@Component
+@Component
 @Slf4j
 public class IncSyncPostToEs {
 
     @Resource
     private PostMapper postMapper;
 
-//    @Resource
-//    private PostEsDao postEsDao;
+    @Resource
+    private PostEsDao postEsDao;
 
     /**
      * 每分钟执行一次
@@ -50,7 +51,7 @@ public class IncSyncPostToEs {
         for (int i = 0; i < total; i += pageSize) {
             int end = Math.min(i + pageSize, total);
             log.info("sync from {} to {}", i, end);
-//            postEsDao.saveAll(postEsDTOList.subList(i, end));
+            postEsDao.saveAll(postEsDTOList.subList(i, end));
         }
         log.info("IncSyncPostToEs end, total {}", total);
     }
