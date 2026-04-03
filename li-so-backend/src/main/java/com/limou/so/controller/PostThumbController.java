@@ -53,4 +53,16 @@ public class PostThumbController {
         return ResultUtils.success(result);
     }
 
+    //添加请求
+//    @PostMapping("/add")
+//    public BaseResponse<Integer> addPostThumb(@RequestBody PostThumbAddRequest postThumbAddRequest,
+//                                              HttpServletRequest request) {
+//        if (postThumbAddRequest == null || postThumbAddRequest.getPostId() <= 0) {
+//            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+//        }
+//        postThumbAddRequest.getPostId();
+//        postThumbService.save(postThumbAddRequest);
+//    }
+
+
 }
