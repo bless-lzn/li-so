@@ -65,3 +65,14 @@ create table if not exists post_favour
     index idx_postId (postId),
     index idx_userId (userId)
 ) comment '帖子收藏';
+
+-- 删除 post_thumb 表的索引
+DROP INDEX idx_postId ON post_thumb;
+DROP INDEX idx_userId ON post_thumb;
+
+ALTER TABLE post_thumb
+    add nickname varchar(255) comment '昵称';
+
+create index idx_postId_nickName on post_thumb (postId,nickname);
+
+drop index idx_postId_nickName on post_thumb;

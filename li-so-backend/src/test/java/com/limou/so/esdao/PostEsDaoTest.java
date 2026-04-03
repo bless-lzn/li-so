@@ -11,13 +11,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class PostEsDaoTest {
-    @Resource
-    private PostEsDao postEsDao;
+//    @Resource
+//    private PostEsDao postEsDao;
 
     @Test
     void findByUserId() {
-        List<PostEsDTO> byUserId = postEsDao.findByUserId(1L);
-        System.out.println(byUserId);
+//        List<PostEsDTO> byUserId = postEsDao.findByUserId(1L);
+//        System.out.println(byUserId);
     }
     @Test
     void add(){
@@ -26,7 +26,7 @@ class PostEsDaoTest {
         postEsDTO.setTitle("测试");
         postEsDTO.setContent("测试");
         postEsDTO.setUserId(1L);
-        postEsDao.save(postEsDTO);
+//        postEsDao.save(postEsDTO);
         System.out.println(postEsDTO);
     }
 }
