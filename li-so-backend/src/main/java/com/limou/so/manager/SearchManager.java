@@ -67,7 +67,7 @@ public class SearchManager {
                 return postDataSource.doSearch(searchText, current, pageSize);
             });
             //等待结果
-            CompletableFuture.allOf(pageUserCompletableFuture, pagePostCompletableFuture, pagePictureCompletableFuture).join();
+            CompletableFuture.allOf(pageUserCompletableFuture, pagePostCompletableFuture, pagePictureCompletableFuture);
             Page<Picture> picturePage = pagePictureCompletableFuture.get();
             Page<UserVO> userVOPage = pageUserCompletableFuture.get();
             Page<PostVO> postVOPage = pagePostCompletableFuture.get();

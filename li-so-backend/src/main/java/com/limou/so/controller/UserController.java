@@ -21,7 +21,9 @@ import com.limou.so.model.vo.LoginUserVO;
 import com.limou.so.model.vo.UserVO;
 import com.limou.so.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -78,6 +80,11 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             return null;
         }
+
+        ArrayList<User> list = new ArrayList<>();
+        //list类型转换成map类型进行存储
+//        list.stream().map().collect(Collectors.toMap());
+
         long result = userService.userRegister(userAccount, userPassword, checkPassword);
         return ResultUtils.success(result);
     }
