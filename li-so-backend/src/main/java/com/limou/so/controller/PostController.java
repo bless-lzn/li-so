@@ -1,6 +1,7 @@
 package com.limou.so.controller;
 
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.limou.so.annotation.AuthCheck;
 import com.limou.so.common.BaseResponse;
@@ -19,9 +20,13 @@ import com.limou.so.model.entity.User;
 import com.limou.so.model.vo.PostVO;
 import com.limou.so.service.PostService;
 import com.limou.so.service.UserService;
+
+import java.io.IOException;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -165,6 +170,74 @@ public class PostController {
         return ResultUtils.success(postPage);
     }
 
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, @RequestBody OrderReserveRecordPageQueryVO queryVO) {
+//        String lockKey = "reserve_export_lock";
+//        long lockTime = 300L;
+//
+//        // 尝试获取锁
+//        Boolean isLocked = redisLockService.setLockBySeconds(lockKey, lockTime);
+//        if (!isLocked) {
+//            // 如果获取锁失败，返回错误信息
+//            try {
+//                response.setContentType("application/json;charset=utf-8");
+//                Response<Void> errorResponse = Response.error(ErrorCode.REDIS_LOCK_WAIT_FAIL.getCode(),
+//                        "导出任务正在执行中，请稍后再试");
+//                response.getWriter().write(JSON.toJSONString(errorResponse));
+//                return;
+//            } catch (IOException e) {
+//                log.warn("固化单导出锁检查失败", e);
+//                return;
+//            }
+//        }
+
+//        try {
+//            log.info("导出固化记录，入参：{}", JSON.toJSONString(queryVO));
+//            ExcelExporter.exportToStream(response, String.format("固化单明细导出_%s.xlsx"
+//                            , DateUtils.dateToString(new Date(),
+//                                    DateUtils.DATETIME_FORMATTER)),
+//                    OrderReserveRecordVO.class, sheetWriter -> {
+//                        int currentPage = 1;
+//                        int pageSize = 1000;
+//                        Long lastId = 0L;
+//                        int size = 0;
+//                        while (true) {
+//                            if (size >= reserveProperties.getExportLimit()) {
+//                                break;
+//                            }
+//                            queryVO.setCurrentPage(currentPage);
+//                            queryVO.setPageSize(pageSize);
+//                            queryVO.setLastId(lastId);
+//                            Response<List<OrderReserveRecordVO>> responseData = this.page(queryVO);
+//                            if (CollectionUtils.isEmpty(responseData.getData())) {
+//                                break;
+//                            }
+                            //设置冻结数、已发货数
+                        /*for (OrderReserveRecordVO reserveRecordVO : responseData.getData()) {
+                            OrderReserveRecordVO reserveRecordPO = responseData.getData().stream().filter(x ->
+                                    x.getSkuCode().equals(reserveRecordVO.getSkuCode())
+                                            && x.getCommodityCode().equals(reserveRecordVO.getCommodityCode())
+                                            && x.getLocationCode().equals(reserveRecordVO.getLocationCode())
+                                            && x.getPoNum().equals(reserveRecordVO.getPoNum())
+                                            && x.getCdcCode().equals(reserveRecordVO.getCdcCode())).findFirst()
+                                            .orElse(null);
+                            if (null == reserveRecordPO) {
+                                continue;
+                            }
+                            reserveRecordVO.setFreezeQty(reserveRecordPO.getFreezeQty());
+                            reserveRecordVO.setShippedQty(reserveRecordPO.getShippedQty());
+//                        }*/
+//                            sheetWriter.write(responseData.getData());
+//                            currentPage++;
+//                            size = size + responseData.getData().size();
+//                            lastId = responseData.getData().get(responseData.getData().size() - 1).getId();
+//                        }
+//                    });
+//        } finally {
+//            redisLockService.del(lockKey);
+//        }
+//    }
+
     /**
      * 分页获取列表（封装类）
      *
@@ -174,7 +247,7 @@ public class PostController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
-            HttpServletRequest request) {
+                                                       HttpServletRequest request) {
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
         // 限制爬虫
@@ -194,7 +267,7 @@ public class PostController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
-            HttpServletRequest request) {
+                                                         HttpServletRequest request) {
         if (postQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -220,7 +293,7 @@ public class PostController {
      */
     @PostMapping("/search/page/vo")
     public BaseResponse<Page<PostVO>> searchPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
-            HttpServletRequest request) {
+                                                         HttpServletRequest request) {
         long size = postQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
